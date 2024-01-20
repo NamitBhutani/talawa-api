@@ -50,7 +50,7 @@ export const mutations = gql`
 
     checkIn(data: CheckInInput!): CheckIn! @auth
 
-    createMember(input: UserAndOrganizationInput!): Organization! @auth
+    createMember(input: UserAndOrganizationInput!): CreateMemberResult! @auth
 
     createAdmin(data: UserAndOrganizationInput!): User!
       @auth

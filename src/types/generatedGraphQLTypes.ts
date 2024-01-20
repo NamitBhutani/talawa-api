@@ -152,6 +152,8 @@ export type ConnectionPageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
+export type CreateMemberResult = MemberAlreadyinOrganizationError | Organization | OrganizationNotFoundError | UserNotFoundError;
+
 export type CreateUserTagInput = {
   name: Scalars['String'];
   organizationId: Scalars['ID'];
@@ -481,6 +483,13 @@ export type MaximumValueError = FieldError & {
   path: Array<Scalars['String']>;
 };
 
+export type MemberAlreadyinOrganizationError = UserErrorInterface & {
+  __typename?: 'MemberAlreadyinOrganizationError';
+  code: Scalars['String'];
+  message: Scalars['String'];
+  param: Scalars['String'];
+};
+
 export type MembershipRequest = {
   __typename?: 'MembershipRequest';
   _id: Scalars['ID'];
@@ -553,7 +562,7 @@ export type Mutation = {
   createEvent: Event;
   createEventProject: EventProject;
   createGroupChat: GroupChat;
-  createMember: Organization;
+  createMember: CreateMemberResult;
   createMessageChat: MessageChat;
   createOrganization: Organization;
   createPlugin: Plugin;
@@ -1169,6 +1178,13 @@ export type OrganizationInput = {
   visibleInSearch: Scalars['Boolean'];
 };
 
+export type OrganizationNotFoundError = UserErrorInterface & {
+  __typename?: 'OrganizationNotFoundError';
+  code: Scalars['String'];
+  message: Scalars['String'];
+  param: Scalars['String'];
+};
+
 export type OrganizationOrderByInput =
   | 'apiUrl_ASC'
   | 'apiUrl_DESC'
@@ -1768,6 +1784,12 @@ export type UserEdge = {
   node: User;
 };
 
+export type UserErrorInterface = {
+  code: Scalars['String'];
+  message: Scalars['String'];
+  param: Scalars['String'];
+};
+
 export type UserInput = {
   appLanguageCode?: InputMaybe<Scalars['String']>;
   email: Scalars['EmailAddress'];
@@ -1775,6 +1797,13 @@ export type UserInput = {
   lastName: Scalars['String'];
   organizationUserBelongsToId?: InputMaybe<Scalars['ID']>;
   password: Scalars['String'];
+};
+
+export type UserNotFoundError = UserErrorInterface & {
+  __typename?: 'UserNotFoundError';
+  code: Scalars['String'];
+  message: Scalars['String'];
+  param: Scalars['String'];
 };
 
 export type UserOrderByInput =
@@ -1996,6 +2025,7 @@ export type ResolversTypes = {
   ConnectionError: ResolversTypes['InvalidCursor'] | ResolversTypes['MaximumValueError'];
   ConnectionPageInfo: ResolverTypeWrapper<ConnectionPageInfo>;
   CountryCode: ResolverTypeWrapper<Scalars['CountryCode']>;
+  CreateMemberResult: ResolversTypes['MemberAlreadyinOrganizationError'] | ResolversTypes['Organization'] | ResolversTypes['OrganizationNotFoundError'] | ResolversTypes['UserNotFoundError'];
   CreateUserTagInput: CreateUserTagInput;
   CursorPaginationInput: CursorPaginationInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
@@ -2039,6 +2069,7 @@ export type ResolversTypes = {
   MaritalStatus: MaritalStatus;
   MaximumLengthError: ResolverTypeWrapper<MaximumLengthError>;
   MaximumValueError: ResolverTypeWrapper<MaximumValueError>;
+  MemberAlreadyinOrganizationError: ResolverTypeWrapper<MemberAlreadyinOrganizationError>;
   MembershipRequest: ResolverTypeWrapper<InterfaceMembershipRequestModel>;
   Message: ResolverTypeWrapper<InterfaceMessageModel>;
   MessageChat: ResolverTypeWrapper<InterfaceMessageChatModel>;
@@ -2051,6 +2082,7 @@ export type ResolversTypes = {
   OrganizationCustomField: ResolverTypeWrapper<OrganizationCustomField>;
   OrganizationInfoNode: ResolverTypeWrapper<Omit<OrganizationInfoNode, 'creator'> & { creator: ResolversTypes['User'] }>;
   OrganizationInput: OrganizationInput;
+  OrganizationNotFoundError: ResolverTypeWrapper<OrganizationNotFoundError>;
   OrganizationOrderByInput: OrganizationOrderByInput;
   OrganizationWhereInput: OrganizationWhereInput;
   OtpData: ResolverTypeWrapper<OtpData>;
@@ -2098,7 +2130,9 @@ export type ResolversTypes = {
   UserConnection: ResolverTypeWrapper<Omit<UserConnection, 'edges'> & { edges: Array<Maybe<ResolversTypes['User']>> }>;
   UserCustomData: ResolverTypeWrapper<UserCustomData>;
   UserEdge: ResolverTypeWrapper<Omit<UserEdge, 'node'> & { node: ResolversTypes['User'] }>;
+  UserErrorInterface: ResolversTypes['MemberAlreadyinOrganizationError'] | ResolversTypes['OrganizationNotFoundError'] | ResolversTypes['UserNotFoundError'];
   UserInput: UserInput;
+  UserNotFoundError: ResolverTypeWrapper<UserNotFoundError>;
   UserOrderByInput: UserOrderByInput;
   UserPhone: ResolverTypeWrapper<UserPhone>;
   UserPhoneInput: UserPhoneInput;
@@ -2134,6 +2168,7 @@ export type ResolversParentTypes = {
   ConnectionError: ResolversParentTypes['InvalidCursor'] | ResolversParentTypes['MaximumValueError'];
   ConnectionPageInfo: ConnectionPageInfo;
   CountryCode: Scalars['CountryCode'];
+  CreateMemberResult: ResolversParentTypes['MemberAlreadyinOrganizationError'] | ResolversParentTypes['Organization'] | ResolversParentTypes['OrganizationNotFoundError'] | ResolversParentTypes['UserNotFoundError'];
   CreateUserTagInput: CreateUserTagInput;
   CursorPaginationInput: CursorPaginationInput;
   Date: Scalars['Date'];
@@ -2172,6 +2207,7 @@ export type ResolversParentTypes = {
   Longitude: Scalars['Longitude'];
   MaximumLengthError: MaximumLengthError;
   MaximumValueError: MaximumValueError;
+  MemberAlreadyinOrganizationError: MemberAlreadyinOrganizationError;
   MembershipRequest: InterfaceMembershipRequestModel;
   Message: InterfaceMessageModel;
   MessageChat: InterfaceMessageChatModel;
@@ -2184,6 +2220,7 @@ export type ResolversParentTypes = {
   OrganizationCustomField: OrganizationCustomField;
   OrganizationInfoNode: Omit<OrganizationInfoNode, 'creator'> & { creator: ResolversParentTypes['User'] };
   OrganizationInput: OrganizationInput;
+  OrganizationNotFoundError: OrganizationNotFoundError;
   OrganizationWhereInput: OrganizationWhereInput;
   OtpData: OtpData;
   PageInfo: PageInfo;
@@ -2224,7 +2261,9 @@ export type ResolversParentTypes = {
   UserConnection: Omit<UserConnection, 'edges'> & { edges: Array<Maybe<ResolversParentTypes['User']>> };
   UserCustomData: UserCustomData;
   UserEdge: Omit<UserEdge, 'node'> & { node: ResolversParentTypes['User'] };
+  UserErrorInterface: ResolversParentTypes['MemberAlreadyinOrganizationError'] | ResolversParentTypes['OrganizationNotFoundError'] | ResolversParentTypes['UserNotFoundError'];
   UserInput: UserInput;
+  UserNotFoundError: UserNotFoundError;
   UserPhone: UserPhone;
   UserPhoneInput: UserPhoneInput;
   UserTag: InterfaceOrganizationTagUserModel;
@@ -2338,6 +2377,10 @@ export type ConnectionPageInfoResolvers<ContextType = any, ParentType extends Re
 export interface CountryCodeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['CountryCode'], any> {
   name: 'CountryCode';
 }
+
+export type CreateMemberResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateMemberResult'] = ResolversParentTypes['CreateMemberResult']> = {
+  __resolveType: TypeResolveFn<'MemberAlreadyinOrganizationError' | 'Organization' | 'OrganizationNotFoundError' | 'UserNotFoundError', ParentType, ContextType>;
+};
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
@@ -2524,6 +2567,13 @@ export type MaximumValueErrorResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MemberAlreadyinOrganizationErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberAlreadyinOrganizationError'] = ResolversParentTypes['MemberAlreadyinOrganizationError']> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  param?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MembershipRequestResolvers<ContextType = any, ParentType extends ResolversParentTypes['MembershipRequest'] = ResolversParentTypes['MembershipRequest']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType>;
@@ -2590,7 +2640,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, Partial<MutationCreateEventArgs>>;
   createEventProject?: Resolver<ResolversTypes['EventProject'], ParentType, ContextType, RequireFields<MutationCreateEventProjectArgs, 'data'>>;
   createGroupChat?: Resolver<ResolversTypes['GroupChat'], ParentType, ContextType, RequireFields<MutationCreateGroupChatArgs, 'data'>>;
-  createMember?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationCreateMemberArgs, 'input'>>;
+  createMember?: Resolver<ResolversTypes['CreateMemberResult'], ParentType, ContextType, RequireFields<MutationCreateMemberArgs, 'input'>>;
   createMessageChat?: Resolver<ResolversTypes['MessageChat'], ParentType, ContextType, RequireFields<MutationCreateMessageChatArgs, 'data'>>;
   createOrganization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, Partial<MutationCreateOrganizationArgs>>;
   createPlugin?: Resolver<ResolversTypes['Plugin'], ParentType, ContextType, RequireFields<MutationCreatePluginArgs, 'pluginCreatedBy' | 'pluginDesc' | 'pluginName'>>;
@@ -2697,6 +2747,13 @@ export type OrganizationInfoNodeResolvers<ContextType = any, ParentType extends 
   isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   visibleInSearch?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationNotFoundErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationNotFoundError'] = ResolversParentTypes['OrganizationNotFoundError']> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  param?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -2904,6 +2961,20 @@ export type UserEdgeResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserErrorInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserErrorInterface'] = ResolversParentTypes['UserErrorInterface']> = {
+  __resolveType: TypeResolveFn<'MemberAlreadyinOrganizationError' | 'OrganizationNotFoundError' | 'UserNotFoundError', ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  param?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type UserNotFoundErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserNotFoundError'] = ResolversParentTypes['UserNotFoundError']> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  param?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserPhoneResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPhone'] = ResolversParentTypes['UserPhone']> = {
   home?: Resolver<Maybe<ResolversTypes['PhoneNumber']>, ParentType, ContextType>;
   mobile?: Resolver<Maybe<ResolversTypes['PhoneNumber']>, ParentType, ContextType>;
@@ -2964,6 +3035,7 @@ export type Resolvers<ContextType = any> = {
   ConnectionError?: ConnectionErrorResolvers<ContextType>;
   ConnectionPageInfo?: ConnectionPageInfoResolvers<ContextType>;
   CountryCode?: GraphQLScalarType;
+  CreateMemberResult?: CreateMemberResultResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   DeletePayload?: DeletePayloadResolvers<ContextType>;
@@ -2988,6 +3060,7 @@ export type Resolvers<ContextType = any> = {
   Longitude?: GraphQLScalarType;
   MaximumLengthError?: MaximumLengthErrorResolvers<ContextType>;
   MaximumValueError?: MaximumValueErrorResolvers<ContextType>;
+  MemberAlreadyinOrganizationError?: MemberAlreadyinOrganizationErrorResolvers<ContextType>;
   MembershipRequest?: MembershipRequestResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   MessageChat?: MessageChatResolvers<ContextType>;
@@ -2997,6 +3070,7 @@ export type Resolvers<ContextType = any> = {
   Organization?: OrganizationResolvers<ContextType>;
   OrganizationCustomField?: OrganizationCustomFieldResolvers<ContextType>;
   OrganizationInfoNode?: OrganizationInfoNodeResolvers<ContextType>;
+  OrganizationNotFoundError?: OrganizationNotFoundErrorResolvers<ContextType>;
   OtpData?: OtpDataResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   PhoneNumber?: GraphQLScalarType;
@@ -3018,6 +3092,8 @@ export type Resolvers<ContextType = any> = {
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserCustomData?: UserCustomDataResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;
+  UserErrorInterface?: UserErrorInterfaceResolvers<ContextType>;
+  UserNotFoundError?: UserNotFoundErrorResolvers<ContextType>;
   UserPhone?: UserPhoneResolvers<ContextType>;
   UserTag?: UserTagResolvers<ContextType>;
   UserTagEdge?: UserTagEdgeResolvers<ContextType>;

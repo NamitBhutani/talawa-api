@@ -52,6 +52,24 @@ export const types = gql`
     endCursor: String
   }
 
+  type OrganizationNotFoundError implements UserErrorInterface {
+    message: String!
+    code: String!
+    param: String!
+  }
+
+  type MemberAlreadyinOrganizationError implements UserErrorInterface {
+    message: String!
+    code: String!
+    param: String!
+  }
+
+  type UserNotFoundError implements UserErrorInterface {
+    message: String!
+    code: String!
+    param: String!
+  }
+
   type DeletePayload {
     success: Boolean!
   }

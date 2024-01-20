@@ -98,6 +98,8 @@ type ConnectionPageInfo {
 
 scalar CountryCode
 
+union CreateMemberResult = MemberAlreadyinOrganizationError | Organization | OrganizationNotFoundError | UserNotFoundError
+
 input CreateUserTagInput {
   name: String!
   organizationId: ID!
@@ -423,6 +425,12 @@ type MaximumValueError implements FieldError {
   path: [String!]!
 }
 
+type MemberAlreadyinOrganizationError implements UserErrorInterface {
+  code: String!
+  message: String!
+  param: String!
+}
+
 type MembershipRequest {
   _id: ID!
   organization: Organization!
@@ -489,7 +497,7 @@ type Mutation {
   createEvent(data: EventInput): Event!
   createEventProject(data: EventProjectInput!): EventProject!
   createGroupChat(data: createGroupChatInput!): GroupChat!
-  createMember(input: UserAndOrganizationInput!): Organization!
+  createMember(input: UserAndOrganizationInput!): CreateMemberResult!
   createMessageChat(data: MessageChatInput!): MessageChat!
   createOrganization(data: OrganizationInput, file: String): Organization!
   createPlugin(pluginCreatedBy: String!, pluginDesc: String!, pluginName: String!, uninstalledOrgs: [ID!]): Plugin!
@@ -609,6 +617,12 @@ input OrganizationInput {
   location: String
   name: String!
   visibleInSearch: Boolean!
+}
+
+type OrganizationNotFoundError implements UserErrorInterface {
+  code: String!
+  message: String!
+  param: String!
 }
 
 enum OrganizationOrderByInput {
@@ -1036,6 +1050,12 @@ type UserEdge {
   node: User!
 }
 
+interface UserErrorInterface {
+  code: String!
+  message: String!
+  param: String!
+}
+
 input UserInput {
   appLanguageCode: String
   email: EmailAddress!
@@ -1043,6 +1063,12 @@ input UserInput {
   lastName: String!
   organizationUserBelongsToId: ID
   password: String!
+}
+
+type UserNotFoundError implements UserErrorInterface {
+  code: String!
+  message: String!
+  param: String!
 }
 
 enum UserOrderByInput {
