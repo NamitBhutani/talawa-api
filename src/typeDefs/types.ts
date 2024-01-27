@@ -51,6 +51,10 @@ export const types = gql`
     startCursor: String
     endCursor: String
   }
+  type CreateMemberPayload {
+    organization: Organization!
+    userErrors: [CreateMemberError!]!
+  }
 
   type OrganizationNotFoundError implements UserErrorInterface {
     message: String!

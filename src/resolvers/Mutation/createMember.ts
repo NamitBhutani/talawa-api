@@ -1,5 +1,6 @@
 import type { MutationResolvers } from "../../types/generatedGraphQLTypes";
 import { requestContext } from "../../libraries";
+import { requestContext } from "../../libraries";
 import { User, Organization } from "../../models";
 import { superAdminCheck } from "../../utilities";
 import {
@@ -37,21 +38,17 @@ export const createMember: MutationResolvers["createMember"] = async (
     //   USER_NOT_FOUND_ERROR.CODE,
     //   USER_NOT_FOUND_ERROR.PARAM
     // );
-    // errors.push({
-    //   __typename: "UserNotFoundError",
-    //   message: requestContext.translate(USER_NOT_FOUND_ERROR.MESSAGE) as string,
-    //   code: USER_NOT_FOUND_ERROR.CODE,
-    //   param: USER_NOT_FOUND_ERROR.PARAM,
-    // });
     return {
-      __typename: "UserNotFoundError",
-      message: requestContext.translate(USER_NOT_FOUND_ERROR.MESSAGE) as string,
-      code: USER_NOT_FOUND_ERROR.CODE,
-      param: USER_NOT_FOUND_ERROR.PARAM,
+      organization: new Organization(),
+      userErrors: [
+        {
+          __typename: "UserNotFoundError",
+          message: requestContext.translate(USER_NOT_FOUND_ERROR.MESSAGE),
+        },
+      ],
     };
-  } else {
-    superAdminCheck(currentUser);
   }
+  superAdminCheck(currentUser);
 
   // Checks if organization exists.
   let organization;
@@ -76,21 +73,16 @@ export const createMember: MutationResolvers["createMember"] = async (
     //   ORGANIZATION_NOT_FOUND_ERROR.CODE,
     //   ORGANIZATION_NOT_FOUND_ERROR.PARAM
     // );
-    // errors.push({
-    //   __typename: "OrganizationNotFoundError",
-    //   message: requestContext.translate(
-    //     ORGANIZATION_NOT_FOUND_ERROR.MESSAGE
-    //   ) as string,
-    //   code: ORGANIZATION_NOT_FOUND_ERROR.CODE,
-    //   param: ORGANIZATION_NOT_FOUND_ERROR.PARAM,
-    // });
     return {
-      __typename: "OrganizationNotFoundError",
-      message: requestContext.translate(
-        ORGANIZATION_NOT_FOUND_ERROR.MESSAGE
-      ) as string,
-      code: ORGANIZATION_NOT_FOUND_ERROR.CODE,
-      param: ORGANIZATION_NOT_FOUND_ERROR.PARAM,
+      organization: new Organization(),
+      userErrors: [
+        {
+          __typename: "OrganizationNotFoundError",
+          message: requestContext.translate(
+            ORGANIZATION_NOT_FOUND_ERROR.MESSAGE
+          ),
+        },
+      ],
     };
   }
 
@@ -105,17 +97,14 @@ export const createMember: MutationResolvers["createMember"] = async (
     //   USER_NOT_FOUND_ERROR.CODE,
     //   USER_NOT_FOUND_ERROR.PARAM
     // );
-    // errors.push({
-    //   __typename: "UserNotFoundError",
-    //   message: requestContext.translate(USER_NOT_FOUND_ERROR.MESSAGE) as string,
-    //   code: USER_NOT_FOUND_ERROR.CODE,
-    //   param: USER_NOT_FOUND_ERROR.PARAM,
-    // });
     return {
-      __typename: "UserNotFoundError",
-      message: requestContext.translate(USER_NOT_FOUND_ERROR.MESSAGE) as string,
-      code: USER_NOT_FOUND_ERROR.CODE,
-      param: USER_NOT_FOUND_ERROR.PARAM,
+      organization: new Organization(),
+      userErrors: [
+        {
+          __typename: "UserNotFoundError",
+          message: requestContext.translate(USER_NOT_FOUND_ERROR.MESSAGE),
+        },
+      ],
     };
   }
 
@@ -130,21 +119,14 @@ export const createMember: MutationResolvers["createMember"] = async (
     //   MEMBER_NOT_FOUND_ERROR.CODE,
     //   MEMBER_NOT_FOUND_ERROR.PARAM
     // );
-    // errors.push({
-    //   __typename: "MemberAlreadyinOrganizationError",
-    //   message: requestContext.translate(
-    //     MEMBER_NOT_FOUND_ERROR.MESSAGE
-    //   ) as string,
-    //   code: MEMBER_NOT_FOUND_ERROR.CODE,
-    //   param: MEMBER_NOT_FOUND_ERROR.PARAM,
-    // });
     return {
-      __typename: "MemberAlreadyinOrganizationError",
-      message: requestContext.translate(
-        MEMBER_NOT_FOUND_ERROR.MESSAGE
-      ) as string,
-      code: MEMBER_NOT_FOUND_ERROR.CODE,
-      param: MEMBER_NOT_FOUND_ERROR.PARAM,
+      organization: new Organization(),
+      userErrors: [
+        {
+          __typename: "MemberAlreadyInOrganizationError",
+          message: requestContext.translate(MEMBER_NOT_FOUND_ERROR.MESSAGE),
+        },
+      ],
     };
   }
 
@@ -181,8 +163,9 @@ export const createMember: MutationResolvers["createMember"] = async (
   if (updatedOrganization !== null) {
     await cacheOrganizations([updatedOrganization]);
   }
+
   return {
-    __typename: "Organization",
-    ...updatedOrganization!,
+    organization: updatedOrganization!,
+    userErrors: [],
   };
 };
