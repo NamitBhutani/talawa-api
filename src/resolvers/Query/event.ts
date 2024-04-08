@@ -26,6 +26,10 @@ export const event: QueryResolvers["event"] = async (_parent, args) => {
       EVENT_NOT_FOUND_ERROR.PARAM,
     );
   }
+  if (!event.title) {
+    // Provide a default value or handle the case appropriately
+    event.title = "Untitled Event";
+  }
 
   return event;
 };
